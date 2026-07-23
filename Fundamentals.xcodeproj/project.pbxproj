@@ -6,11 +6,27 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXContainerItemProxy section */
+		92EE700130114610006BD41A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 92F9FDD23007EFCD006FCF99 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 92F9FDD93007EFCD006FCF99;
+			remoteInfo = Fundamentals;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
+		92EE6FFD30114610006BD41A /* FundamentalsTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FundamentalsTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		92F9FDDA3007EFCE006FCF99 /* Fundamentals.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Fundamentals.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
+		92EE6FFE30114610006BD41A /* FundamentalsTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = FundamentalsTests;
+			sourceTree = "<group>";
+		};
 		92F9FDDC3007EFCE006FCF99 /* Fundamentals */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = Fundamentals;
@@ -19,6 +35,13 @@
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		92EE6FFA30114610006BD41A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		92F9FDD73007EFCD006FCF99 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -33,6 +56,7 @@
 			isa = PBXGroup;
 			children = (
 				92F9FDDC3007EFCE006FCF99 /* Fundamentals */,
+				92EE6FFE30114610006BD41A /* FundamentalsTests */,
 				92F9FDDB3007EFCE006FCF99 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -41,6 +65,7 @@
 			isa = PBXGroup;
 			children = (
 				92F9FDDA3007EFCE006FCF99 /* Fundamentals.app */,
+				92EE6FFD30114610006BD41A /* FundamentalsTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -48,6 +73,29 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		92EE6FFC30114610006BD41A /* FundamentalsTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 92EE700330114610006BD41A /* Build configuration list for PBXNativeTarget "FundamentalsTests" */;
+			buildPhases = (
+				92EE6FF930114610006BD41A /* Sources */,
+				92EE6FFA30114610006BD41A /* Frameworks */,
+				92EE6FFB30114610006BD41A /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				92EE700230114610006BD41A /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				92EE6FFE30114610006BD41A /* FundamentalsTests */,
+			);
+			name = FundamentalsTests;
+			packageProductDependencies = (
+			);
+			productName = FundamentalsTests;
+			productReference = 92EE6FFD30114610006BD41A /* FundamentalsTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		92F9FDD93007EFCD006FCF99 /* Fundamentals */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 92F9FDE53007EFCF006FCF99 /* Build configuration list for PBXNativeTarget "Fundamentals" */;
@@ -80,6 +128,10 @@
 				LastSwiftUpdateCheck = 2650;
 				LastUpgradeCheck = 2650;
 				TargetAttributes = {
+					92EE6FFC30114610006BD41A = {
+						CreatedOnToolsVersion = 26.5;
+						TestTargetID = 92F9FDD93007EFCD006FCF99;
+					};
 					92F9FDD93007EFCD006FCF99 = {
 						CreatedOnToolsVersion = 26.5;
 					};
@@ -100,11 +152,19 @@
 			projectRoot = "";
 			targets = (
 				92F9FDD93007EFCD006FCF99 /* Fundamentals */,
+				92EE6FFC30114610006BD41A /* FundamentalsTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		92EE6FFB30114610006BD41A /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		92F9FDD83007EFCD006FCF99 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -115,6 +175,13 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		92EE6FF930114610006BD41A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		92F9FDD63007EFCD006FCF99 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -124,7 +191,62 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		92EE700230114610006BD41A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 92F9FDD93007EFCD006FCF99 /* Fundamentals */;
+			targetProxy = 92EE700130114610006BD41A /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin XCBuildConfiguration section */
+		92EE700430114610006BD41A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = KVR89CWB45;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.5;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.anthonysantiago.FundamentalsTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Fundamentals.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Fundamentals";
+			};
+			name = Debug;
+		};
+		92EE700530114610006BD41A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = KVR89CWB45;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.5;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.anthonysantiago.FundamentalsTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Fundamentals.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Fundamentals";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
 		92F9FDE33007EFCF006FCF99 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -332,6 +454,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		92EE700330114610006BD41A /* Build configuration list for PBXNativeTarget "FundamentalsTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				92EE700430114610006BD41A /* Debug */,
+				92EE700530114610006BD41A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		92F9FDD53007EFCD006FCF99 /* Build configuration list for PBXProject "Fundamentals" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
