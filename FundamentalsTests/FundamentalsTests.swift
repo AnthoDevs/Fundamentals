@@ -112,24 +112,70 @@ struct FundamentalsTests {
         
     }
     
+    @Test
+    func pokemonMakeAttack() throws {
+        let pkmAttacker = pokemonArray[0]
+        let pkmDeffender = pokemonArray[1]
+        
+        let result = try pkmAttacker.makeAttack(with: "bit", to: pkmDeffender)
+        let expected = 15.030303030303031
+        #expect(abs(expected - result) < 0.01)
+    }
+    
+    @Test func movementNotFound() async throws {
+        let pkmAttacker = pokemonArray[0]
+        let pkmDeffender = pokemonArray[1]
+        
+        #expect(throws: MoveError.moveNotFound) {
+            try pkmAttacker.makeAttack(with: "solarbeem", to: pkmDeffender)
+        }
+    }
+    
+    @Test
+    func localsortPokemons() {
+        let pokemon = pokemonArray.shuffled()
+        let sortedPokemon = GenericFunctions.localSort(pokemon) { pokemonA, pokemonB in
+            pokemonA.name > pokemonB.name
+        }
+        #expect(sortedPokemon[0].name == "Squirtle")
+    }
+
+    @Test
+    func genericLocalSort() {
+        let shuffledArray = [1,10,2,30,0,23,44]
+        let sortedArray = GenericFunctions.localSort(shuffledArray) { itemA, itemB in
+            itemA > itemB
+        }
+        #expect(sortedArray[0] == 44)
+    }
+
+    @Test
+    func genericLocalSearch() {
+        let array = ["Anthony", "Vaporeon", "Paola", "Ambkor"]
+        let result = GenericFunctions.search(array) { item in
+            item == "Paola"
+        }
+        #expect(result.count == 1)
+    }
+
     let pokemonArray: [Pokemon] = [
         .init(
             id: 1,
             name: "Bulbasaur",
             types: [.bug, .grass],
-            moves: [.init(name: ":D",
-                          type: .bug,
+            moves: [.init(name: "bit",
+                          type: .grass,
                           power: 12)],
             defense: 1,
             attack: 100, baseHp: 100),
         .init(
             id: 2,
             name: "Charmander",
-            types: [.bug, .grass],
+            types: [.fire, .grass],
             moves: [.init(name: ":D",
                           type: .bug,
                           power: 12)],
-            defense: 1,
+            defense: 33,
             attack: 100, baseHp: 100),
         .init(
             id: 3,

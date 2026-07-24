@@ -1,14 +1,9 @@
-//
-//  Move.swift
-//  Fundamentals
-//
-//  Created by Anthony on 7/15/26.
-//
-
-import Foundation
+enum MoveError: Error {
+    case moveNotFound
+}
 
 struct Move: Codable, Hashable {
     let name: String
     let type: PokemonType
-    let power: Int
+    let power: Double
 }
