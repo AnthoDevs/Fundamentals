@@ -1,21 +1,22 @@
 @testable import Fundamentals
+import Foundation
 import Testing
 
 struct FundamentalsTests {
 
-    @Test func pikachuNameIsPikachu() {
+    @Test func computedPropertyDualType() {
         let pokemon: Pokemon = .init(
             id: 1,
             name: "Pikachu",
-            types: [.bug],
-            moves: [.init(name: ":D",
+            types: [.bug, .electric],
+            moves: [.init(name: ":P",
                           type: .bug,
                           power: 12)],
             defense: 1,
             attack: 100,
             baseHp: 100)
 
-        #expect(pokemon.name == "Pikachu")
+        #expect(pokemon.isDualType == true)
     }
     
     @Test
@@ -66,6 +67,49 @@ struct FundamentalsTests {
         #expect(throws: TeamError.pokemonNotFound) {
             try pokemonList.remove(pokemonToRemove)
         }
+    }
+    
+    @Test
+    func verifyEqualsPokemon() {
+        let pokemonA = pokemonArray[0]
+        let pokemonB = pokemonArray[0]
+        #expect(pokemonA == pokemonB)
+    }
+
+    @Test
+    func verifyUnequalsPokemon() {
+        let pokemonA = pokemonArray[0]
+        let pokemonB = pokemonArray[1]
+        #expect(pokemonA != pokemonB)
+    }
+    
+    @Test func decodeJsonToPokemon() throws{
+        let json = """
+        {
+            "id": 1,
+            "name": "Bulbasaur",
+            "types": [
+                "bug",
+                "grass"
+            ],
+            "moves": [
+                {
+                    "name": ":D",
+                    "type": "bug",
+                    "power": 12
+                }
+            ],
+            "defense": 1,
+            "attack": 100,
+            "baseHp": 100
+        }
+        """
+        let data = Data(json.utf8)
+        let pokemon = try JSONDecoder().decode(Pokemon.self, from: data)
+        #expect(pokemon.id == 1)
+        #expect(pokemon.name == "Bulbasaur")
+        #expect(pokemon.baseHp == 100)
+        
     }
     
     let pokemonArray: [Pokemon] = [

@@ -1,4 +1,5 @@
-struct Pokemon {
+import Foundation
+struct Pokemon: Codable, Hashable {
     let id: Int
     let name: String
     let types: [PokemonType]
