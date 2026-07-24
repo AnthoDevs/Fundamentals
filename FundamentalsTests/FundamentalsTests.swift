@@ -158,6 +158,24 @@ struct FundamentalsTests {
         #expect(result.count == 1)
     }
 
+    @Test
+    func trainerReference() {
+        weak var trainerObserver: Trainer?
+        weak var gymObserver: Gym?
+        do {
+            let trainer = Trainer(name: "Anthony", level: 100, pokemon: pokemonArray, region: "Sinnon")
+            let gym = Gym(id: 1, name: "First Gym", address: "")
+            trainer.gym = gym
+            gym.trainer = trainer
+            gymObserver = gym
+            trainerObserver = trainer
+            #expect(gymObserver != nil)
+            #expect(trainerObserver != nil)
+        }
+        #expect(gymObserver == nil)
+        #expect(trainerObserver == nil)
+    }
+
     let pokemonArray: [Pokemon] = [
         .init(
             id: 1,
