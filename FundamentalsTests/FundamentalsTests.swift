@@ -3,7 +3,7 @@ import Foundation
 import Testing
 
 struct FundamentalsTests {
-
+    let pokemonArray = mockData().pokemonArray
     @Test func computedPropertyDualType() {
         let pokemon: Pokemon = .init(
             id: 1,
@@ -109,7 +109,6 @@ struct FundamentalsTests {
         #expect(pokemon.id == 1)
         #expect(pokemon.name == "Bulbasaur")
         #expect(pokemon.baseHp == 100)
-        
     }
     
     @Test
@@ -118,7 +117,7 @@ struct FundamentalsTests {
         let pkmDeffender = pokemonArray[1]
         
         let result = try pkmAttacker.makeAttack(with: "bit", to: pkmDeffender)
-        let expected = 15.030303030303031
+        let expected = 15.333333333333334
         #expect(abs(expected - result) < 0.01)
     }
     
@@ -157,6 +156,15 @@ struct FundamentalsTests {
         }
         #expect(result.count == 1)
     }
+    
+    @Test
+    func searchPokemonByPower() {
+        let team: Team = .init(pokemon: pokemonArray)
+        let powerTeam = GenericFunctions.search(team.pokemon) { pokemon in
+            pokemon.attack > 100
+        }
+        #expect(powerTeam.count == 3)
+    }
 
     @Test
     func trainerReference() {
@@ -176,7 +184,26 @@ struct FundamentalsTests {
         #expect(trainerObserver == nil)
     }
 
-    let pokemonArray: [Pokemon] = [
+    @Test
+    func effectivenessTable() {
+        // Given & When
+        let electricVsGround: Double = PokemonType.electric.calculateDamage(against: .ground)
+        let grassVsPoison: Double = PokemonType.grass.calculateDamage(against: .poison)
+        let ghostVsNormal: Double = PokemonType.ghost.calculateDamage(against: .normal)
+        let groundVsElectric: Double = PokemonType.ground.calculateDamage(against: .electric)
+
+        // Then
+        #expect(electricVsGround == 0)
+        #expect(grassVsPoison == 0.5)
+        #expect(ghostVsNormal == 0)
+        #expect(groundVsElectric == 2.0)
+        
+    }
+}
+
+
+enum MockData {
+    static let pokemonArray: [Pokemon] = [
         .init(
             id: 1,
             name: "Bulbasaur",
@@ -185,7 +212,7 @@ struct FundamentalsTests {
                           type: .grass,
                           power: 12)],
             defense: 1,
-            attack: 100, baseHp: 100),
+            attack: 110, baseHp: 100),
         .init(
             id: 2,
             name: "Charmander",
@@ -194,7 +221,7 @@ struct FundamentalsTests {
                           type: .bug,
                           power: 12)],
             defense: 33,
-            attack: 100, baseHp: 100),
+            attack: 100, baseHp: 120),
         .init(
             id: 3,
             name: "Squirtle",
@@ -203,7 +230,7 @@ struct FundamentalsTests {
                           type: .bug,
                           power: 12)],
             defense: 1,
-            attack: 100, baseHp: 100),
+            attack: 90, baseHp: 140),
         .init(
             id: 4,
             name: "Pikachu",
@@ -212,7 +239,7 @@ struct FundamentalsTests {
                           type: .bug,
                           power: 12)],
             defense: 1,
-            attack: 100, baseHp: 100),
+            attack: 140, baseHp: 90),
         .init(
             id: 5,
             name: "Jigglypuff",
@@ -221,7 +248,7 @@ struct FundamentalsTests {
                           type: .bug,
                           power: 12)],
             defense: 1,
-            attack: 100, baseHp: 100),
+            attack: 40, baseHp: 300),
         .init(
             id: 6,
             name: "Meowth",
@@ -230,6 +257,6 @@ struct FundamentalsTests {
                           type: .bug,
                           power: 12)],
             defense: 1,
-            attack: 100, baseHp: 100),
+            attack: 140, baseHp: 80),
         ]
 }
