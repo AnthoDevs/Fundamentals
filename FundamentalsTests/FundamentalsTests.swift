@@ -3,7 +3,7 @@ import Foundation
 import Testing
 
 struct FundamentalsTests {
-    let pokemonArray = mockData().pokemonArray
+    let pokemonArray = MockData.pokemonArray
     @Test func computedPropertyDualType() {
         let pokemon: Pokemon = .init(
             id: 1,

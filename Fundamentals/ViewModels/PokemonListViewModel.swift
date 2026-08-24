@@ -3,8 +3,19 @@ import SwiftUI
 @Observable
 final class PokemonListViewModel {
     private var pokemonList: [Pokemon]
-    var search: String = ""
+    private(set) var favorites: Set<Int> = []
+    var search: String = "" {
+        didSet {
+            updateListState()
+        }
+    }
     var sortByNameAsc: Bool = false
+    var listState: ListState = .empty
+    private(set) var showFavorites: Bool = false
+    
+    init(pokemonList: [Pokemon]) {
+        self.pokemonList = pokemonList
+    }
 
     var filteredList: [Pokemon] {
         var filteredResult: [Pokemon] = []
@@ -20,11 +31,48 @@ final class PokemonListViewModel {
         filteredResult = GenericFunctions.localSort(filteredResult) { a, b in
             sortByNameAsc ? a.name < b.name : a.name > b.name
         }
-
+        
+        if showFavorites {
+            filteredResult = GenericFunctions.search(filteredResult) { pokemon in
+                favorites.contains(pokemon.id)
+            }
+        }
         return filteredResult
     }
-    init(pokemonList: [Pokemon]) {
-        self.pokemonList = pokemonList
+    
+    func simulateCallAPI(for seconds: Int) async {
+        do {
+            self.listState = .loading
+            try await Task.sleep(for: .seconds(seconds))
+            self.listState = .content
+        } catch {
+            listState = .error
+        }
     }
-   
+
+    func filterFavorites() {
+        showFavorites.toggle()
+        updateListState()
+    }
+    
+    func toggleFavorite(id: Int) {
+        if favorites.contains(id){
+            favorites.remove(id)
+        } else {
+            favorites.insert(id)
+        }
+        updateListState()
+    }
+    
+    func isFavorite(id: Int) -> Bool {
+        favorites.contains(id)
+    }
+
+    func getError() {
+        listState = .error
+    }
+    
+    func updateListState() {
+        listState = filteredList.isEmpty ? .empty : .content
+    }
 }

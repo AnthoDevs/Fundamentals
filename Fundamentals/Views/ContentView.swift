@@ -8,22 +8,115 @@
 import SwiftUI
 
 struct ContentView: View {
-    @State private var pokemonViewModel: PokemonListViewModel = .init(pokemonList: pokemonArray)
+    @State private var pokemonViewModel: PokemonListViewModel = PokemonListViewModel(pokemonList: pokemonArray)
+    @State private var isGrid: Bool = false
     var body: some View {
-        VStack{
-            Text("Pokemon List")
-            HStack {
-                TextField("Search pokemon by name", text: $pokemonViewModel.search)
-                    .textFieldStyle(.roundedBorder)
-                Toggle("Sort by name", isOn: $pokemonViewModel.sortByNameAsc)
+        NavigationStack {
+            VStack{
+                Text("Pokemon List")
+                HStack {
+                    TextField("Search pokemon by name", text: $pokemonViewModel.search)
+                        .padding()
+                        .background(.gray.opacity(0.15))
+                        .foregroundStyle(.blue)
+                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                    #if DEBUG
+                    Button {
+                        pokemonViewModel.getError()
+                    } label: {
+                        Image(systemName: "exclamationmark.triangle.fill")
+                    }
+                    #endif // DEBUG
+                    Button {
+                        pokemonViewModel.filterFavorites()
+                    } label: {
+                            Image(systemName: pokemonViewModel.showFavorites ? "star.fill" : "star")
+                                .font(.title2)
+                                .foregroundStyle(.yellow)
+                    }
+                    .padding(10)
+                }
+                HStack(spacing: 0) {
+                    Toggle("Sort by name", isOn: $pokemonViewModel.sortByNameAsc)
+                        .fixedSize()
+                    Spacer()
+                    Button {
+                        isGrid.toggle()
+                    } label: {
+                        Image(systemName: isGrid ? "grid" : "list.bullet")
+                            .font(.title2)
+                        
+                    }.padding(10)
+                }.padding()
+                switch pokemonViewModel.listState {
+                    case .loading:
+                    Spacer()
+                    ProgressView("Loading pokemon...")
+                    Spacer()
+                case .empty:
+                    Spacer()
+                    Text("No pokemon registered")
+                    Spacer()
+                case .error:
+                    Spacer()
+                    Text("Error")
+                    Button {
+                        Task {
+                            await pokemonViewModel.simulateCallAPI(for: 2)
+                        }
+                    } label: {
+                        Image(systemName: "arrow.clockwise")
+                    }
+                    Spacer()
+                case .content:
+                    if isGrid {
+                        LazyVGrid(columns: [GridItem(.adaptive(minimum: 100, maximum: 200))]) {
+                            ForEach(pokemonViewModel.filteredList){ pokemon in
+                                    pokemonCell(pokemon: pokemon)
+                            }
+                        }
+                        Spacer()
+                    } else {
+                        List (pokemonViewModel.filteredList){ pokemon in
+                            pokemonCell(pokemon: pokemon)
+                        }
+                    }
+                }
             }
-            
-            List (pokemonViewModel.filteredList){ pokemon in
-                Text("Name: \(pokemon.name)")
+            .padding()
+        }
+        .task {
+            await pokemonViewModel.simulateCallAPI(for: 3)
+        }
+    }
+    
+    @ViewBuilder
+    func pokemonCell(pokemon: Pokemon ) -> some View {
+        NavigationLink {
+            PokemonDetail(pokemon: pokemon, isFavorite: pokemonViewModel.isFavorite(id: pokemon.id), toggleFavorite: pokemonViewModel.toggleFavorite(id:))
+        } label: {
+            if isGrid {
+                VStack{
+                    Image(systemName: "person")
+                        .font(.title)
+                    Text(pokemon.name)
+                    HStack{
+                        ForEach(pokemon.types, id: \.self) { type in
+                            Image(systemName: "circle.fill")
+                        }
+                    }
+                }.padding()
+            } else {
+                Image(systemName: "person")
+                    .font(.callout)
+                Text(pokemon.name)
+                ForEach(pokemon.types, id: \.self) { type in
+                 Image(systemName: "circle.fill")
+                }
             }
         }
-        .padding()
     }
+    
     private static let pokemonArray: [Pokemon] = [
         .init(
             id: 1,
