@@ -197,7 +197,6 @@ struct FundamentalsTests {
         #expect(grassVsPoison == 0.5)
         #expect(ghostVsNormal == 0)
         #expect(groundVsElectric == 2.0)
-        
     }
 }
 

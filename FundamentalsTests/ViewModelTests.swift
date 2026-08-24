@@ -107,4 +107,31 @@ struct ViewModelTests {
         await sut.simulateCallAPI(for: 0)
         #expect(sut.listState == .content)
     }
+    
+    @Test
+    func updateFavoriteList() {
+        let sut = PokemonListViewModel(pokemonList: MockData.pokemonArray)
+        sut.toggleFavorite(id: 1)
+        sut.toggleFavorite(id: 2)
+        #expect(sut.favorites.count == 2)
+    }
+
+    @Test
+    func searchField() {
+        let sut = PokemonListViewModel(pokemonList: MockData.pokemonArray)
+        let initialFilteredPokemon = sut.filteredList.count
+        sut.search = "Ch"
+        
+        #expect(sut.filteredList.count == 2)
+        #expect(sut.listState == .content)
+
+        sut.search = "testing"
+        #expect(sut.filteredList.count == 0)
+        #expect(sut.listState == .empty)
+
+        sut.search = ""
+        #expect(sut.search == "")
+        #expect(sut.filteredList.count == initialFilteredPokemon)
+        #expect(sut.listState == .content)
+    }
 }
