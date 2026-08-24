@@ -25,6 +25,7 @@ struct ContentView: View {
                         pokemonViewModel.getError()
                     } label: {
                         Image(systemName: "exclamationmark.triangle.fill")
+                            .accessibilityLabel("Simulate an error")
                     }
                     #endif // DEBUG
                     Button {
@@ -33,6 +34,7 @@ struct ContentView: View {
                             Image(systemName: pokemonViewModel.showFavorites ? "star.fill" : "star")
                                 .font(.title2)
                                 .foregroundStyle(.yellow)
+                                .accessibilityLabel(pokemonViewModel.showFavorites ? "Show all pokemon" : "Show only favorites")
                     }
                     .padding(10)
                 }
@@ -45,6 +47,7 @@ struct ContentView: View {
                     } label: {
                         Image(systemName: isGrid ? "grid" : "list.bullet")
                             .font(.title2)
+                            .accessibilityLabel(!isGrid ? "Show grid" : "Show list")
                         
                     }.padding(10)
                 }.padding()
@@ -66,6 +69,7 @@ struct ContentView: View {
                         }
                     } label: {
                         Image(systemName: "arrow.clockwise")
+                            .accessibilityLabel("Retry")
                     }
                     Spacer()
                 case .content:
@@ -99,22 +103,29 @@ struct ContentView: View {
                 VStack{
                     Image(systemName: "person")
                         .font(.title)
+                        .accessibilityHidden(true)
                     Text(pokemon.name)
+                        .accessibilityLabel(pokemon.name)
                     HStack{
                         ForEach(pokemon.types, id: \.self) { type in
                             Image(systemName: "circle.fill")
+                                .accessibilityLabel(type.rawValue)
                         }
                     }
                 }.padding()
             } else {
                 Image(systemName: "person")
                     .font(.callout)
+                    .accessibilityHidden(true)
                 Text(pokemon.name)
+                    .accessibilityLabel(pokemon.name)
                 ForEach(pokemon.types, id: \.self) { type in
-                 Image(systemName: "circle.fill")
+                    Image(systemName: "circle.fill")
+                        .accessibilityLabel(type.rawValue)
                 }
             }
         }
+        .accessibilityElement(children: .combine)
     }
     
     private static let pokemonArray: [Pokemon] = [

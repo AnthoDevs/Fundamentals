@@ -1,5 +1,5 @@
 enum PokemonType : String, Codable {
-    case normal = "normal"
+    case normal
     case fire
     case water
     case electric

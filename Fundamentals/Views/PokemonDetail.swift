@@ -11,6 +11,7 @@ struct PokemonDetail: View {
     let pokemon: Pokemon
     let isFavorite: Bool
     let toggleFavorite: (Int) -> Void
+    @ScaledMetric var iconSize: CGFloat = 20
     var body: some View {
         VStack {
             HStack {
@@ -21,11 +22,12 @@ struct PokemonDetail: View {
                 } label: {
                     Image(systemName: isFavorite ? "star.fill" : "star")
                         .resizable()
-                        .frame(width: 20, height: 20)
+                        .frame(width: iconSize, height: iconSize)
+                        .accessibilityLabel(isFavorite ? "Unmark as favorite" : "Mark as favorite")
                 }
             }
             Divider()
-            Text("Atk: \(pokemon.attack.formatted(.number.precision(.fractionLength(2))))")
+            Text("Attack: \(pokemon.attack.formatted(.number.precision(.fractionLength(2))))")
                 .font(.title2)
             Text("Types: " + pokemon.types.map(\.rawValue).joined(separator: ", "))
                 .font(.title2)
