@@ -109,6 +109,7 @@ struct ViewModelTests {
     }
     
     @Test
+    @MainActor
     func updateFavoriteList() {
         let sut = PokemonListViewModel(pokemonList: MockData.pokemonArray)
         sut.toggleFavorite(id: 1)
@@ -117,6 +118,7 @@ struct ViewModelTests {
     }
 
     @Test
+    @MainActor
     func searchField() {
         let sut = PokemonListViewModel(pokemonList: MockData.pokemonArray)
         let initialFilteredPokemon = sut.filteredList.count
