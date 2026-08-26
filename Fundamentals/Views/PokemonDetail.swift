@@ -8,35 +8,51 @@
 import SwiftUI
 
 struct PokemonDetail: View {
-    let pokemon: Pokemon
     let isFavorite: Bool
     let toggleFavorite: (Int) -> Void
+    @State var pokemonDetailViewModel: PokemonDetailViewModel = PokemonDetailViewModel()
+    let pokemonName: String
     @ScaledMetric var iconSize: CGFloat = 20
+
     var body: some View {
-        VStack {
-            HStack {
-                Text(pokemon.name)
-                    .font(.largeTitle)
-                Button {
-                    toggleFavorite(pokemon.id)
-                } label: {
-                    Image(systemName: isFavorite ? "star.fill" : "star")
-                        .resizable()
-                        .frame(width: iconSize, height: iconSize)
-                        .accessibilityLabel(isFavorite ? "Unmark as favorite" : "Mark as favorite")
+        Group {
+            switch pokemonDetailViewModel.viewState {
+            case .loaded(let pokemon):
+                VStack {
+                    HStack {
+                        Text(pokemon.name)
+                            .font(.largeTitle)
+                        Button {
+                            toggleFavorite(pokemon.id)
+                        } label: {
+                            Image(systemName: isFavorite ? "star.fill" : "star")
+                                .resizable()
+                                .frame(width: iconSize, height: iconSize)
+                                .accessibilityLabel(isFavorite ? "Unmark as favorite" : "Mark as favorite")
+                        }
+                    }
+                    Divider()
+                    Text("Attack: \(pokemon.attack.formatted(.number.precision(.fractionLength(2))))")
+                        .font(.title2)
+                    Text("Types: " + pokemon.types.map(\.rawValue).joined(separator: ", "))
+                        .font(.title2)
+                }
+            case .loading:
+                ProgressView()
+            case .error:
+                Text("Error")
+                Button("Retry")  {
+                    Task{
+                        await pokemonDetailViewModel.getPokemonDetail(name: pokemonName)
+                    }
                 }
             }
-            Divider()
-            Text("Attack: \(pokemon.attack.formatted(.number.precision(.fractionLength(2))))")
-                .font(.title2)
-            Text("Types: " + pokemon.types.map(\.rawValue).joined(separator: ", "))
-                .font(.title2)
+        }.task {
+            await pokemonDetailViewModel.getPokemonDetail(name: pokemonName)
         }
     }
 }
 
 #Preview {
-    PokemonDetail(pokemon: Pokemon(id: 1, name: "Pichachu", types: [.bug, .electric], moves: [.init(name: "Tackle", type: .normal, power: 0)], defense: 10.0, attack: 300.0, baseHp: 100), isFavorite: true) { _ in
-        
-    }
+    PokemonDetail(isFavorite: true, toggleFavorite:  {_ in return }, pokemonName: "pikachu")
 }

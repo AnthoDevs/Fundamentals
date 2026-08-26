@@ -97,7 +97,11 @@ struct ContentView: View {
     @ViewBuilder
     func pokemonCell(pokemon: Pokemon ) -> some View {
         NavigationLink {
-            PokemonDetail(pokemon: pokemon, isFavorite: pokemonViewModel.isFavorite(id: pokemon.id), toggleFavorite: pokemonViewModel.toggleFavorite(id:))
+            PokemonDetail(
+                isFavorite: pokemonViewModel.isFavorite(id: pokemon.id),
+                toggleFavorite: pokemonViewModel.toggleFavorite(id: ),
+                pokemonName: pokemon.name
+            )
         } label: {
             if isGrid {
                 VStack{

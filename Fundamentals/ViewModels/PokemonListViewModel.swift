@@ -5,7 +5,6 @@ import SwiftUI
 final class PokemonListViewModel {
     private var pokemonList: [Pokemon]
     private(set) var favorites: Set<Int> = []
-    private var repository: Repository
 
     var search: String = "" {
         didSet {
@@ -18,7 +17,6 @@ final class PokemonListViewModel {
     
     init(pokemonList: [Pokemon]) {
         self.pokemonList = pokemonList
-        self.repository = Repository()
     }
 
     var filteredList: [Pokemon] {
@@ -46,17 +44,9 @@ final class PokemonListViewModel {
     
     func simulateCallAPI(for seconds: Int) async {
         self.listState = .loading
-        repository.getPokemon { result in
-            switch result {
-            case .success(let list):
-                self.pokemonList = list
-                self.updateListState()
-                break
-            case .failure(_):
-                self.listState = .error
-                break
-            }
-        }
+        self.pokemonList = pokemonList
+        self.updateListState()
+        self.listState = .content
     }
 
     func filterFavorites() {
@@ -65,7 +55,7 @@ final class PokemonListViewModel {
     }
     
     func toggleFavorite(id: Int) {
-        if favorites.contains(id){
+        if favorites.contains(id) {
             favorites.remove(id)
         } else {
             favorites.insert(id)
