@@ -8,7 +8,7 @@
 import Testing
 import Foundation
 
-class PokemonDTOTests {
+struct PokemonDTOTests {
 
     @Test
     func decodeDataToPokemonDTO() throws {

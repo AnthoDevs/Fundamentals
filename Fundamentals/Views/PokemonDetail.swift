@@ -10,7 +10,7 @@ import SwiftUI
 struct PokemonDetail: View {
     let isFavorite: Bool
     let toggleFavorite: (Int) -> Void
-    @State var pokemonDetailViewModel: PokemonDetailViewModel = PokemonDetailViewModel()
+    @State var pokemonDetailViewModel: PokemonDetailViewModel
     let pokemonName: String
     @ScaledMetric var iconSize: CGFloat = 20
 
@@ -54,5 +54,9 @@ struct PokemonDetail: View {
 }
 
 #Preview {
-    PokemonDetail(isFavorite: true, toggleFavorite:  {_ in return }, pokemonName: "pikachu")
+    let service = PokemonAPIService(session: URLSession.shared)
+    PokemonDetail(isFavorite: true,
+                  toggleFavorite:  {_ in return },
+                  pokemonDetailViewModel: PokemonDetailViewModel(service: service),
+                  pokemonName: "pikachu")
 }

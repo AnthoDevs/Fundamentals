@@ -10,6 +10,7 @@ import SwiftUI
 struct ContentView: View {
     @State private var pokemonViewModel: PokemonListViewModel = PokemonListViewModel(pokemonList: pokemonArray)
     @State private var isGrid: Bool = false
+    let pokemonService: PokemonAPIServiceProtocol = PokemonAPIService(session: URLSession.shared)
     var body: some View {
         NavigationStack {
             VStack{
@@ -100,6 +101,7 @@ struct ContentView: View {
             PokemonDetail(
                 isFavorite: pokemonViewModel.isFavorite(id: pokemon.id),
                 toggleFavorite: pokemonViewModel.toggleFavorite(id: ),
+                pokemonDetailViewModel: PokemonDetailViewModel(service: pokemonService),
                 pokemonName: pokemon.name
             )
         } label: {

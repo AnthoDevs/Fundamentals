@@ -6,31 +6,53 @@
 //
 
 import Foundation
-enum NetworkError: Error {
+enum NetworkError: Error, Equatable {
     case notFound
     case unauthorized
     case serverError
-    case decodingError(Error)
+    case decodingError
     case badUrl
     case timeout
     case unknown
+    case noConnection
+    case cancelled
 }
 enum ApiUrl: String {
     case detail = "https://pokeapi.co/api/v2/pokemon/"
 }
-class PokemonAPIService {
+class PokemonAPIService: PokemonAPIServiceProtocol {
+    let session: URLSession
+
+    init(session: URLSession) {
+        self.session = session
+    }
+
     let pokemonUrl: ApiUrl = .detail
     func getPokemon(name: String) async throws -> Pokemon {
+        try Task.checkCancellation()
+        
         guard let url = URL(string: "\(pokemonUrl.rawValue)\(name)") else { throw NetworkError.badUrl }
         
         let data: Data
         let apiResponse: URLResponse
 
         do {
-            (data, apiResponse) = try await URLSession.shared.data(from: url)
+            (data, apiResponse) = try await session.data(from: url)
+            try Task.checkCancellation()
+        } catch let cancellError as CancellationError {
+            throw NetworkError.cancelled
+        } catch let urlError as URLError {
+            switch urlError.code {
+                case .timedOut: throw NetworkError.timeout
+                case .notConnectedToInternet: throw NetworkError.noConnection
+                case .cancelled: throw NetworkError.cancelled
+                default: throw NetworkError.unknown
+            }
+            
         } catch {
-            throw NetworkError.timeout
+            throw NetworkError.unknown
         }
+
         guard let response = apiResponse as? HTTPURLResponse else { throw NetworkError.unknown }
             switch response.statusCode {
             case 200:
@@ -39,7 +61,7 @@ class PokemonAPIService {
                     let pokemon = dto.toDomain()
                     return pokemon
                 } catch {
-                    throw NetworkError.decodingError(error)
+                    throw NetworkError.decodingError
                 }
             case 404:
                 throw NetworkError.notFound
