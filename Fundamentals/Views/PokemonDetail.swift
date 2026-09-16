@@ -9,7 +9,7 @@ import SwiftUI
 
 struct PokemonDetail: View {
     let isFavorite: Bool
-    let toggleFavorite: (Int) -> Void
+    let toggleFavorite: (String) -> Void
     @State var pokemonDetailViewModel: PokemonDetailViewModel
     let pokemonName: String
     @ScaledMetric var iconSize: CGFloat = 20
@@ -23,7 +23,7 @@ struct PokemonDetail: View {
                         Text(pokemon.name)
                             .font(.largeTitle)
                         Button {
-                            toggleFavorite(pokemon.id)
+                            toggleFavorite(pokemon.name)
                         } label: {
                             Image(systemName: isFavorite ? "star.fill" : "star")
                                 .resizable()

@@ -43,3 +43,27 @@ Decisiones técnicas y limitaciones conocidas:
     
 
 */
+
+
+/*
+
+    Cierre del Nivel 3
+    1.- 
+    Error           Causa                       ¿Reintentable?    Mensaje al usuario
+    .notFound       HTTP 404                    No                  We couldn’t find what you’re looking for.
+    .unauthorized   HTTP 401                    No                  Your session has expired. Please sign in again.
+    .serverError    HTTP 500                    Si                  Something went wrong. Please try again.
+    .decodingError  jsonDecodingError           No                  We couldn’t load the data. Please try again later.
+    .badUrl         bad url formatting          No                  Something went wrong. Please try again later.
+    .timeout        URLError                    Si                  The request took too long. Please try again.
+    .noConnection   URLError no internet        Si                  No internet connection. Check your connection and try again.
+    .cancelled      cancelled by user           No                  Ningún mensaje
+    .unknown        unexpected error            No                  Something went wrong. Please try again later
+    
+    2.- 
+    task(getPokemonDetail) -> viewModel(pokemonDetailViewModel) -> getPokemon(DeduplicatingPokemonAPIService) -> if inFlightDetail ? return current task on flight : getPokemon(PokemonAPIService) -> URLSession -> if error ? throw NetworkError : return .loaded(Pokemon) ->  pokemonDetailViewModel.viewState -> PokemonDetailView show pokemonDetail.
+    
+    3.- DTO vs dominio: DTO es la estructura de la respuesta que proviene de la API, la utilizamos para guardar los datos del json, el dominio o modelo de dominio es la representacion estructural de la informacion que necesita nuestra aplicacion para transportar y mostrar datos. En el proyecto pudimos sacar los stats anidados a niveles mas simples para facil acceso y trabajo, de igual forma en el mapeo se descartan los valores que no utilizaremos como frontShinyFemale entre otros.
+        El mapeo de errores personalizados como NetworkError, es una buena practica por que no dependemos de los valores que provienen de backend y nuestra UI puede mostrar mensajes personalizados definidos sin exponer respuestas de servicio que son fallas de seguridad.
+        Decisiones técnicas y limitaciones conocidas: Algunos datos como move quedaron con datos de relleno al no contarse con la informacion en ese servicio, isRetryable es una propiedad calculada para abarcar las condiciones en las que es logico hacer un reintento sin este ser un tipo de error lo cual lo limitaria o agregaria complejidad, se utilizo @actor para la deduplicacion para asegurar que dos task que quieran acceder al mismo recuso lo hagan de forma serializada y poder evaluar si estan onflight, de otra forma ambas pueden llegar, no estar onflight y ejecurarse, de igual forma se aseguro un Task.sleep para asegurar que no se ejecuten todos los intentos de retry al mismo tiempo.
+*/

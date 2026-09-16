@@ -12,4 +12,5 @@ enum ListState: Equatable {
     case empty
     case error
     case content
+    case retryable
 }

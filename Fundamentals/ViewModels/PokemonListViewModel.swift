@@ -3,24 +3,19 @@ import SwiftUI
 @MainActor
 @Observable
 final class PokemonListViewModel {
-    private var pokemonList: [Pokemon]
-    private(set) var favorites: Set<Int> = []
-
+    private var pokemonList: [PokemonListItem] = []
+    private var service: PokemonAPIServiceProtocol
+    var sortByNameAsc: Bool = false
+    var listState: ListState = .empty
+    private(set) var showFavorites: Bool = false
+    private(set) var favorites: Set<String> = []
     var search: String = "" {
         didSet {
             updateListState()
         }
     }
-    var sortByNameAsc: Bool = false
-    var listState: ListState = .empty
-    private(set) var showFavorites: Bool = false
-    
-    init(pokemonList: [Pokemon]) {
-        self.pokemonList = pokemonList
-    }
-
-    var filteredList: [Pokemon] {
-        var filteredResult: [Pokemon] = []
+    var filteredList: [PokemonListItem] {
+        var filteredResult: [PokemonListItem] = []
 
         if search.isEmpty {
             filteredResult = pokemonList
@@ -36,35 +31,42 @@ final class PokemonListViewModel {
         
         if showFavorites {
             filteredResult = GenericFunctions.search(filteredResult) { pokemon in
-                favorites.contains(pokemon.id)
+                favorites.contains(pokemon.name)
             }
         }
         return filteredResult
     }
-    
-    func simulateCallAPI(for seconds: Int) async {
-        self.listState = .loading
-        self.pokemonList = pokemonList
-        self.updateListState()
-        self.listState = .content
+    init(service: PokemonAPIServiceProtocol) {
+        self.service = service
     }
+    func getPokemonList(limit: Int, offset: Int) async {
+        self.listState = .loading
+        do {
+            let pokemonList =  try await service.getPokemonList(limit: limit, offset: offset)
+            self.pokemonList = pokemonList.pokemonItem
+            self.listState = .content
+        } catch {
+            self.listState = .error
+        }
+    }
+
 
     func filterFavorites() {
         showFavorites.toggle()
         updateListState()
     }
     
-    func toggleFavorite(id: Int) {
-        if favorites.contains(id) {
-            favorites.remove(id)
+    func toggleFavorite(name: String) {
+        if favorites.contains(name) {
+            favorites.remove(name)
         } else {
-            favorites.insert(id)
+            favorites.insert(name)
         }
         updateListState()
     }
     
-    func isFavorite(id: Int) -> Bool {
-        favorites.contains(id)
+    func isFavorite(name: String) -> Bool {
+        favorites.contains(name)
     }
 
     func getError() {

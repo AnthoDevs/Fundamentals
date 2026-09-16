@@ -1,36 +1,47 @@
 @testable import Fundamentals
+import Foundation
 import Testing
 
 struct ViewModelTests {
     let pokemonArray = MockData.pokemonArray
-    
+    func getService() -> PokemonAPIService {
+        let config = URLSessionConfiguration.ephemeral
+        config.protocolClasses = [MockURLProtocol.self]
+        let session = URLSession(configuration: config)
+        let service = PokemonAPIService(session: session)
+        return service
+    }
+
     @Test()
     @MainActor
     func emptySearch() async {
         // GIVEN
-        let sut = PokemonListViewModel(pokemonList: MockData.pokemonArray)
-        await sut.simulateCallAPI(for: 0)
+        let service = getService()
+        let sut = PokemonListViewModel(service: service)
+        await sut.getPokemonList(limit: 20, offset: 0)
         // WHEN
         let expected = sut.filteredList.count
         // THEN
-        #expect(expected == pokemonArray.count)
+        #expect(expected == 20)
     }
     
     @Test
     @MainActor
     func filterByName() async {
-        let sut = PokemonListViewModel(pokemonList: MockData.pokemonArray)
-        await sut.simulateCallAPI(for: 0)
+        let service = getService()
+        let sut = PokemonListViewModel(service: service)
+        await sut.getPokemonList(limit: 20, offset: 0)
         sut.search = "ch"
         let expected = sut.filteredList.count
-        #expect(expected == 2)
+        #expect(expected == 3)
     }
     
     @Test
     @MainActor
     func filterReturnEmpty() async {
-        let sut = PokemonListViewModel(pokemonList: MockData.pokemonArray)
-        await sut.simulateCallAPI(for: 0)
+        let service = getService()
+        let sut = PokemonListViewModel(service: service)
+        await sut.getPokemonList(limit: 20, offset: 0)
         sut.search = "anthony"
         let expected = sut.filteredList.count
         #expect(expected == 0)
@@ -39,26 +50,28 @@ struct ViewModelTests {
     @Test
     @MainActor
     func sortOrderOnFilter() async {
-        let sut = PokemonListViewModel(pokemonList: MockData.pokemonArray)
-        await sut.simulateCallAPI(for: 0)
+        let service = getService()
+        let sut = PokemonListViewModel(service: service)
+        await sut.getPokemonList(limit: 20, offset: 0)
         let fullList = sut.filteredList.count
         let firstPokemonUnordered = sut.filteredList.first?.name
         sut.sortByNameAsc = true
         let firstPokemonSorted = sut.filteredList.first?.name
         
         #expect(firstPokemonUnordered != firstPokemonSorted)
-        #expect(firstPokemonSorted == "Bulbasaur")
-        #expect(firstPokemonUnordered == "Squirtle")
-        #expect(fullList == 6)
+        #expect(firstPokemonSorted == "beedrill")
+        #expect(firstPokemonUnordered == "weedle")
+        #expect(fullList == 20)
     }
     
     @Test
     @MainActor
     func filterfavorites() async{
-        let sut = PokemonListViewModel(pokemonList: MockData.pokemonArray)
-        await sut.simulateCallAPI(for: 0)
+        let service = getService()
+        let sut = PokemonListViewModel(service: service)
+        await sut.getPokemonList(limit: 20, offset: 0)
         let firstPokemon = sut.filteredList.first!
-        sut.toggleFavorite(id: firstPokemon.id)
+        sut.toggleFavorite(name: firstPokemon.id)
         sut.filterFavorites()
         #expect(sut.filteredList.count == 1)
     }
@@ -66,28 +79,31 @@ struct ViewModelTests {
     @Test
     @MainActor
     func addAndRemoveFavorite() async {
-        let sut = PokemonListViewModel(pokemonList: MockData.pokemonArray)
-        await sut.simulateCallAPI(for: 0)
+        let service = getService()
+        let sut = PokemonListViewModel(service: service)
+        await sut.getPokemonList(limit: 20, offset: 0)
         let firstPokemon = sut.filteredList.first!
-        sut.toggleFavorite(id: firstPokemon.id)
+        sut.toggleFavorite(name: firstPokemon.id)
         #expect(sut.favorites.count == 1)
-        sut.toggleFavorite(id: firstPokemon.id)
+        sut.toggleFavorite(name: firstPokemon.id)
         #expect(sut.favorites.count == 0)
     }
     
     @Test
     @MainActor
     func simulateAPICall() async {
-        let sut = PokemonListViewModel(pokemonList: MockData.pokemonArray)
-        await sut.simulateCallAPI(for: 0)
-        #expect(sut.filteredList.count == 6)
+        let service = getService()
+        let sut = PokemonListViewModel(service: service)
+        await sut.getPokemonList(limit: 20, offset: 0)
+        #expect(sut.filteredList.count == 20)
     }
     
     @Test
     @MainActor
     func emptyState() async {
-        let sut = PokemonListViewModel(pokemonList: MockData.pokemonArray)
-        await sut.simulateCallAPI(for: 0)
+        let service = getService()
+        let sut = PokemonListViewModel(service: service)
+        await sut.getPokemonList(limit: 20, offset: 0)
         sut.search = "asdasd"
         #expect(sut.listState == .empty)
     }
@@ -95,7 +111,8 @@ struct ViewModelTests {
     @Test
     @MainActor
     func errorState() async {
-        let sut = PokemonListViewModel(pokemonList: MockData.pokemonArray)
+        let service = getService()
+        let sut = PokemonListViewModel(service: service)
         sut.getError()
         #expect(sut.listState == .error)
     }
@@ -103,28 +120,46 @@ struct ViewModelTests {
     @Test
     @MainActor
     func successState() async {
-        let sut = PokemonListViewModel(pokemonList: MockData.pokemonArray)
-        await sut.simulateCallAPI(for: 0)
+        let service = getService()
+        let sut = PokemonListViewModel(service: service)
+        await sut.getPokemonList(limit: 20, offset: 0)
         #expect(sut.listState == .content)
     }
     
     @Test
     @MainActor
-    func updateFavoriteList() {
-        let sut = PokemonListViewModel(pokemonList: MockData.pokemonArray)
-        sut.toggleFavorite(id: 1)
-        sut.toggleFavorite(id: 2)
+    func updateFavoriteList() async {
+        MockURLProtocol.requestHandler = { request in
+            let response = HTTPURLResponse(
+                url: request.url!,
+                statusCode: 200,
+                httpVersion: nil,
+                headerFields: nil
+            )!
+            let data = try TestJSONLoader.load("pokemonList")
+            return (
+                response,
+                Data(data)
+            )
+        }
+        let service = getService()
+        let sut = PokemonListViewModel(service: service)
+        await sut.getPokemonList(limit: 20, offset: 0)
+        sut.toggleFavorite(name: "bulbasaur")
+        sut.toggleFavorite(name: "ivysaur")
         #expect(sut.favorites.count == 2)
     }
 
     @Test
     @MainActor
-    func searchField() {
-        let sut = PokemonListViewModel(pokemonList: MockData.pokemonArray)
+    func searchField() async {
+        let service = getService()
+        let sut = PokemonListViewModel(service: service)
+        await sut.getPokemonList(limit: 20, offset: 0)
         let initialFilteredPokemon = sut.filteredList.count
         sut.search = "Ch"
         
-        #expect(sut.filteredList.count == 2)
+        #expect(sut.filteredList.count == 3)
         #expect(sut.listState == .content)
 
         sut.search = "testing"

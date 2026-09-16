@@ -109,7 +109,39 @@ struct APIServicesTests {
             Issue.record("Error expected")
         }
     }
-    
+
+    @MainActor
+    @Test
+    func unknown400Error() async {
+        defer {
+            MockURLProtocol.requestHandler = nil
+        }
+        MockURLProtocol.requestHandler = { request in
+            let response = HTTPURLResponse(
+                url: request.url!,
+                statusCode: 400,
+                httpVersion: nil,
+                headerFields: nil
+            )!
+            
+            return (response, Data())
+        }
+        let config = URLSessionConfiguration.ephemeral
+        config.protocolClasses = [MockURLProtocol.self]
+        let session = URLSession(configuration: config)
+        let service = PokemonAPIService(session: session)
+        let sut = PokemonDetailViewModel(service: service)
+
+        await sut.getPokemonDetail(name: "togepi")
+        
+        switch sut.viewState {
+        case .error(let networkError):
+            #expect(networkError == .unknown)
+        default:
+            Issue.record("Expected error")
+        }
+    }
+
     @MainActor
     @Test
     func unauthorized() async {

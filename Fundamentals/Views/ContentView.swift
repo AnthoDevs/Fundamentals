@@ -8,9 +8,21 @@
 import SwiftUI
 
 struct ContentView: View {
-    @State private var pokemonViewModel: PokemonListViewModel = PokemonListViewModel(pokemonList: pokemonArray)
+    
     @State private var isGrid: Bool = false
     let pokemonService: PokemonAPIServiceProtocol = PokemonAPIService(session: URLSession.shared)
+    @State private var pokemonViewModel: PokemonListViewModel
+    @State private var pokemonDetailViewModel: PokemonDetailViewModel
+    var limit: Int = 20
+    var offset: Int = 0
+
+    init() {
+        let retryService: PokemonAPIServiceProtocol = RetryAPIService(wrapped: pokemonService)
+        let deduplicatedPokemonService: PokemonAPIServiceProtocol = DeduplicatingPokemonAPIService(wrapping: retryService)
+        self.pokemonViewModel = PokemonListViewModel(service: deduplicatedPokemonService)
+        self.pokemonDetailViewModel = PokemonDetailViewModel(service: deduplicatedPokemonService)
+    }
+
     var body: some View {
         NavigationStack {
             VStack{
@@ -53,7 +65,7 @@ struct ContentView: View {
                     }.padding(10)
                 }.padding()
                 switch pokemonViewModel.listState {
-                    case .loading:
+                case .loading:
                     Spacer()
                     ProgressView("Loading pokemon...")
                     Spacer()
@@ -66,7 +78,7 @@ struct ContentView: View {
                     Text("Error")
                     Button {
                         Task {
-                            await pokemonViewModel.simulateCallAPI(for: 2)
+                            await pokemonViewModel.getPokemonList(limit: limit, offset: offset)
                         }
                     } label: {
                         Image(systemName: "arrow.clockwise")
@@ -86,22 +98,29 @@ struct ContentView: View {
                             pokemonCell(pokemon: pokemon)
                         }
                     }
+                case .retryable:
+                    Text("Something went wrong, please try again")
+                    Button("Try again") {
+                        Task {
+                            await pokemonViewModel.getPokemonList(limit: limit, offset: offset)
+                        }
+                    }
                 }
             }
             .padding()
         }
         .task {
-            await pokemonViewModel.simulateCallAPI(for: 3)
+            await pokemonViewModel.getPokemonList(limit: limit, offset: offset)
         }
     }
     
     @ViewBuilder
-    func pokemonCell(pokemon: Pokemon ) -> some View {
+    func pokemonCell(pokemon: PokemonListItem ) -> some View {
         NavigationLink {
             PokemonDetail(
-                isFavorite: pokemonViewModel.isFavorite(id: pokemon.id),
-                toggleFavorite: pokemonViewModel.toggleFavorite(id: ),
-                pokemonDetailViewModel: PokemonDetailViewModel(service: pokemonService),
+                isFavorite: pokemonViewModel.isFavorite(name: pokemon.name),
+                toggleFavorite: pokemonViewModel.toggleFavorite(name: ),
+                pokemonDetailViewModel: pokemonDetailViewModel,
                 pokemonName: pokemon.name
             )
         } label: {
@@ -112,12 +131,6 @@ struct ContentView: View {
                         .accessibilityHidden(true)
                     Text(pokemon.name)
                         .accessibilityLabel(pokemon.name)
-                    HStack{
-                        ForEach(pokemon.types, id: \.self) { type in
-                            Image(systemName: "circle.fill")
-                                .accessibilityLabel(type.rawValue)
-                        }
-                    }
                 }.padding()
             } else {
                 Image(systemName: "person")
@@ -125,71 +138,10 @@ struct ContentView: View {
                     .accessibilityHidden(true)
                 Text(pokemon.name)
                     .accessibilityLabel(pokemon.name)
-                ForEach(pokemon.types, id: \.self) { type in
-                    Image(systemName: "circle.fill")
-                        .accessibilityLabel(type.rawValue)
-                }
             }
         }
         .accessibilityElement(children: .combine)
     }
-    
-    private static let pokemonArray: [Pokemon] = [
-        .init(
-            id: 1,
-            name: "Bulbasaur",
-            types: [.bug, .grass],
-            moves: [.init(name: "bit",
-                          type: .grass,
-                          power: 12)],
-            defense: 1,
-            attack: 110, baseHp: 100),
-        .init(
-            id: 2,
-            name: "Charmander",
-            types: [.fire, .grass],
-            moves: [.init(name: ":D",
-                          type: .bug,
-                          power: 12)],
-            defense: 33,
-            attack: 100, baseHp: 120),
-        .init(
-            id: 3,
-            name: "Squirtle",
-            types: [.bug, .grass],
-            moves: [.init(name: ":D",
-                          type: .bug,
-                          power: 12)],
-            defense: 1,
-            attack: 90, baseHp: 140),
-        .init(
-            id: 4,
-            name: "Pikachu",
-            types: [.bug, .grass],
-            moves: [.init(name: ":D",
-                          type: .bug,
-                          power: 12)],
-            defense: 1,
-            attack: 140, baseHp: 90),
-        .init(
-            id: 5,
-            name: "Jigglypuff",
-            types: [.bug, .grass],
-            moves: [.init(name: ":D",
-                          type: .bug,
-                          power: 12)],
-            defense: 1,
-            attack: 40, baseHp: 300),
-        .init(
-            id: 6,
-            name: "Meowth",
-            types: [.bug, .grass],
-            moves: [.init(name: ":D",
-                          type: .bug,
-                          power: 12)],
-            defense: 1,
-            attack: 140, baseHp: 80),
-        ]
 }
 
 #Preview {
