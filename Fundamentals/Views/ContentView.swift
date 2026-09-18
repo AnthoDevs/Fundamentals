@@ -6,10 +6,12 @@
 //
 
 import SwiftUI
+import UIKit
 
 struct ContentView: View {
     
     @State private var isGrid: Bool = false
+    @State private var isUIKIT: Bool = true // Hardcoded to test viewController
     let pokemonService: PokemonAPIServiceProtocol = PokemonAPIService(session: URLSession.shared)
     @State private var pokemonViewModel: PokemonListViewModel
     @State private var pokemonDetailViewModel: PokemonDetailViewModel
@@ -86,16 +88,20 @@ struct ContentView: View {
                     }
                     Spacer()
                 case .content:
-                    if isGrid {
-                        LazyVGrid(columns: [GridItem(.adaptive(minimum: 100, maximum: 200))]) {
-                            ForEach(pokemonViewModel.filteredList){ pokemon in
-                                    pokemonCell(pokemon: pokemon)
-                            }
-                        }
-                        Spacer()
+                    if isUIKIT {
+                        uikitView()
                     } else {
-                        List (pokemonViewModel.filteredList){ pokemon in
-                            pokemonCell(pokemon: pokemon)
+                        if isGrid {
+                            LazyVGrid(columns: [GridItem(.adaptive(minimum: 100, maximum: 200))]) {
+                                ForEach(pokemonViewModel.filteredList){ pokemon in
+                                    pokemonCell(pokemon: pokemon)
+                                }
+                            }
+                            Spacer()
+                        } else {
+                            List (pokemonViewModel.filteredList){ pokemon in
+                                pokemonCell(pokemon: pokemon)
+                            }
                         }
                     }
                 case .retryable:
@@ -141,6 +147,18 @@ struct ContentView: View {
             }
         }
         .accessibilityElement(children: .combine)
+    }
+    
+    struct uikitView : UIViewControllerRepresentable {
+        typealias UIViewControllerType = PokemonListViewController
+
+        func makeUIViewController(context: Context) -> PokemonListViewController {
+            PokemonListViewController()
+        }
+
+        func updateUIViewController(_ uiViewController: PokemonListViewController, context: Context) {
+            
+        }
     }
 }
 
