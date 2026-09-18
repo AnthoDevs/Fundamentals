@@ -1,11 +1,11 @@
 import Foundation
-struct PokemonList {
+struct PokemonList: Hashable {
     var next: String?
     var previous: String?
     var pokemonItem: [PokemonListItem]
 }
 
-struct PokemonListItem: Identifiable {
+nonisolated struct PokemonListItem: Hashable, Identifiable {
     let id: String
     var name: String
     var url: String

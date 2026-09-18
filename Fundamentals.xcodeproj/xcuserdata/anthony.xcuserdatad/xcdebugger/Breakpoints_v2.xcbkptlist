@@ -34,6 +34,36 @@
             endingLineNumber = "51"
             landmarkName = "body"
             landmarkType = "24">
+            <Locations>
+               <Location
+                  uuid = "16C74063-7C45-470A-979B-A221F9066BD2 - 1ab0963ef5f7af89"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(1) suspend resume partial function for closure #2 () async -&gt; () in Fundamentals.PokemonDetail.body.getter : some"
+                  moduleName = "Fundamentals.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/anthony/Documents/Study/iOS/technical/Fundamentals/Fundamentals/Views/PokemonDetail.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "51"
+                  endingLineNumber = "51">
+               </Location>
+               <Location
+                  uuid = "16C74063-7C45-470A-979B-A221F9066BD2 - b39c74b84abfc5a9"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(2) await resume partial function for closure #2 () async -&gt; () in Fundamentals.PokemonDetail.body.getter : some"
+                  moduleName = "Fundamentals.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/anthony/Documents/Study/iOS/technical/Fundamentals/Fundamentals/Views/PokemonDetail.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "51"
+                  endingLineNumber = "51">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -50,6 +80,64 @@
             endingLineNumber = "50"
             landmarkName = "body"
             landmarkType = "24">
+            <Locations>
+               <Location
+                  uuid = "B6074E4B-6B99-405D-A3E4-B23E05AB91B1 - 22b7bc8c5f2af225"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Fundamentals.PokemonDetail.body.getter : some"
+                  moduleName = "Fundamentals.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/anthony/Documents/Study/iOS/technical/Fundamentals/Fundamentals/Views/PokemonDetail.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "50"
+                  endingLineNumber = "50">
+               </Location>
+               <Location
+                  uuid = "B6074E4B-6B99-405D-A3E4-B23E05AB91B1 - 11252b91c047f302"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 () -&gt; SwiftUI._ConditionalContent&lt;SwiftUI._ConditionalContent&lt;SwiftUI.VStack&lt;SwiftUI.TupleView&lt;(SwiftUI.HStack&lt;SwiftUI.TupleView&lt;(SwiftUI.Text, SwiftUI.Button&lt;SwiftUI.ModifiedContent&lt;&lt;&lt;opaque return type of SwiftUI.View.frame(width: Swift.Optional&lt;CoreGraphics.CGFloat&gt;, height: Swift.Optional&lt;CoreGraphics.CGFloat&gt;, alignment: SwiftUI.Alignment) -&gt; some&gt;&gt;.0, SwiftUI.AccessibilityAttachmentModifier&gt;&gt;)&gt;&gt;, SwiftUI.Divider, SwiftUI.Text, SwiftUI.Text)&gt;&gt;, SwiftUI.ProgressView&lt;SwiftUI.EmptyView, SwiftUI.EmptyView&gt;&gt;, SwiftUI.TupleView&lt;(SwiftUI.Text, SwiftUI.Button&lt;SwiftUI.Text&gt;)&gt;&gt; in Fundamentals.PokemonDetail.body.getter : some"
+                  moduleName = "Fundamentals.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/anthony/Documents/Study/iOS/technical/Fundamentals/Fundamentals/Views/PokemonDetail.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "50"
+                  endingLineNumber = "50">
+               </Location>
+               <Location
+                  uuid = "B6074E4B-6B99-405D-A3E4-B23E05AB91B1 - 70afba6f32836d74"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #2 () async -&gt; () in Fundamentals.PokemonDetail.body.getter : some"
+                  moduleName = "Fundamentals.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/anthony/Documents/Study/iOS/technical/Fundamentals/Fundamentals/Views/PokemonDetail.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "50"
+                  endingLineNumber = "50">
+               </Location>
+               <Location
+                  uuid = "B6074E4B-6B99-405D-A3E4-B23E05AB91B1 - 1ab0963ef5f7af68"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(1) suspend resume partial function for closure #2 () async -&gt; () in Fundamentals.PokemonDetail.body.getter : some"
+                  moduleName = "Fundamentals.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/anthony/Documents/Study/iOS/technical/Fundamentals/Fundamentals/Views/PokemonDetail.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "50"
+                  endingLineNumber = "50">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
